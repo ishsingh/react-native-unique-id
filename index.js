@@ -21,7 +21,7 @@ const generate = () => {
  * @param {function} [callback]
  * @return {Promise} if uses without callback
  */
-module.exports = function uniqueId (callback) {
+module.exports.uniqueId = (callback) => {
   return polygoat(done => {
     if (id) return done(null, id)
 
@@ -39,5 +39,16 @@ module.exports = function uniqueId (callback) {
         done(null, id)
       }
     })
+  }, callback)
+}
+
+module.exports.resetUniqueId = (callback) => {
+  return polygoat(done => {
+      const generatedId = generate()
+      AsyncStorage.setItem('__uniqueId', generatedId, (error) => {
+        if (error) return done(error)
+        id = generatedId
+        done(null, id)
+      })
   }, callback)
 }
